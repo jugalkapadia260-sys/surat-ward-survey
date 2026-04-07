@@ -1,0 +1,493 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Surat Ward Citizen Feedback Form</title>
+<link href="https://fonts.googleapis.com/css2?family=Tiro+Gujarati&family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --saffron: #FF6B00;
+    --deep: #1a1200;
+    --gold: #F5A623;
+    --cream: #FFF8EE;
+    --green: #2E7D32;
+    --red: #C62828;
+    --text: #2C1810;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--cream);
+    color: var(--text);
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* Decorative top bar - Indian flag colors */
+  .flag-bar {
+    height: 6px;
+    background: linear-gradient(90deg, #FF9933 33.33%, #fff 33.33%, #fff 66.66%, #138808 66.66%);
+  }
+
+  .container {
+    max-width: 560px;
+    margin: 0 auto;
+    padding: 2rem 1.5rem 4rem;
+  }
+
+  /* Header */
+  .header {
+    text-align: center;
+    padding: 2.5rem 0 2rem;
+    animation: fadeDown 0.6s ease both;
+  }
+
+  .city-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    background: var(--saffron);
+    color: white;
+    font-size: 0.72rem;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    padding: 0.35rem 1rem;
+    border-radius: 2rem;
+    margin-bottom: 1.2rem;
+  }
+
+  h1 {
+    font-family: 'DM Serif Display', serif;
+    font-size: clamp(1.8rem, 5vw, 2.4rem);
+    line-height: 1.2;
+    color: var(--deep);
+    margin-bottom: 0.5rem;
+  }
+
+  h1 span { color: var(--saffron); }
+
+  .gujarati-title {
+    font-family: 'Tiro Gujarati', serif;
+    font-size: 1.1rem;
+    color: #6B4C2A;
+    margin-bottom: 1rem;
+  }
+
+  .deadline {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    background: #FFF3E0;
+    border: 1.5px solid #FFB74D;
+    color: #E65100;
+    font-size: 0.8rem;
+    font-weight: 600;
+    padding: 0.4rem 0.9rem;
+    border-radius: 0.4rem;
+  }
+
+  /* Main card */
+  .card {
+    background: white;
+    border-radius: 1.2rem;
+    box-shadow: 0 4px 32px rgba(255,107,0,0.08), 0 1px 4px rgba(0,0,0,0.06);
+    overflow: hidden;
+    animation: fadeUp 0.7s ease 0.2s both;
+  }
+
+  .card-inner {
+    padding: 2rem 2rem 1.5rem;
+  }
+
+  /* State screens */
+  .screen { display: none; }
+  .screen.active { display: block; }
+
+  /* Idle screen */
+  .location-icon {
+    width: 72px;
+    height: 72px;
+    background: linear-gradient(135deg, #FFF3E0, #FFE0B2);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 1.2rem;
+    font-size: 2rem;
+  }
+
+  .screen-title {
+    font-family: 'DM Serif Display', serif;
+    font-size: 1.3rem;
+    text-align: center;
+    margin-bottom: 0.5rem;
+    color: var(--deep);
+  }
+
+  .screen-sub {
+    font-size: 0.88rem;
+    color: #7B6050;
+    text-align: center;
+    line-height: 1.6;
+    margin-bottom: 1.5rem;
+  }
+
+  .gujarati-sub {
+    font-family: 'Tiro Gujarati', serif;
+    font-size: 0.9rem;
+    color: #9B7B60;
+    text-align: center;
+    margin-bottom: 1.8rem;
+  }
+
+  /* Button */
+  .btn {
+    width: 100%;
+    padding: 0.95rem;
+    border: none;
+    border-radius: 0.75rem;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+  }
+
+  .btn-primary {
+    background: var(--saffron);
+    color: white;
+    box-shadow: 0 4px 16px rgba(255,107,0,0.3);
+  }
+
+  .btn-primary:hover {
+    background: #E55A00;
+    transform: translateY(-1px);
+    box-shadow: 0 6px 20px rgba(255,107,0,0.4);
+  }
+
+  .btn-primary:active { transform: translateY(0); }
+
+  .btn-success {
+    background: var(--green);
+    color: white;
+    box-shadow: 0 4px 16px rgba(46,125,50,0.3);
+    font-size: 1.05rem;
+  }
+
+  .btn-success:hover {
+    background: #1B5E20;
+    transform: translateY(-1px);
+  }
+
+  /* Loading screen */
+  .spinner {
+    width: 48px;
+    height: 48px;
+    border: 4px solid #FFE0B2;
+    border-top-color: var(--saffron);
+    border-radius: 50%;
+    animation: spin 0.9s linear infinite;
+    margin: 0 auto 1.2rem;
+  }
+
+  /* Success screen */
+  .success-icon {
+    width: 80px;
+    height: 80px;
+    background: linear-gradient(135deg, #E8F5E9, #C8E6C9);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 1.2rem;
+    font-size: 2.2rem;
+    animation: popIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) both;
+  }
+
+  /* Error screen */
+  .error-icon {
+    width: 80px;
+    height: 80px;
+    background: linear-gradient(135deg, #FFEBEE, #FFCDD2);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 1.2rem;
+    font-size: 2.2rem;
+    animation: popIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) both;
+  }
+
+  .error-title { color: var(--red); }
+
+  /* Location info */
+  .location-info {
+    background: #F5F5F5;
+    border-radius: 0.6rem;
+    padding: 0.8rem 1rem;
+    margin: 1rem 0;
+    font-size: 0.82rem;
+    color: #555;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  /* Divider */
+  .divider {
+    height: 1px;
+    background: #F0E8E0;
+    margin: 1.5rem 0;
+  }
+
+  /* Footer */
+  .footer {
+    padding: 1rem 2rem 1.5rem;
+    background: #FFF8F0;
+    border-top: 1px solid #F0E8E0;
+  }
+
+  .initiator {
+    font-size: 0.78rem;
+    color: #9B7B60;
+    text-align: center;
+    line-height: 1.6;
+  }
+
+  .initiator strong { color: var(--saffron); }
+
+  /* Animations */
+  @keyframes fadeDown {
+    from { opacity: 0; transform: translateY(-20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  @keyframes spin {
+    to { transform: rotate(360deg); }
+  }
+
+  @keyframes popIn {
+    from { opacity: 0; transform: scale(0.5); }
+    to { opacity: 1; transform: scale(1); }
+  }
+
+  /* Surat map decoration */
+  .map-dots {
+    display: flex;
+    justify-content: center;
+    gap: 0.3rem;
+    margin-bottom: 1rem;
+  }
+
+  .dot {
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    background: #FFD0A0;
+    animation: pulse 1.5s ease infinite;
+  }
+  .dot:nth-child(2) { animation-delay: 0.2s; background: var(--saffron); }
+  .dot:nth-child(3) { animation-delay: 0.4s; }
+
+  @keyframes pulse {
+    0%, 100% { opacity: 0.4; transform: scale(1); }
+    50% { opacity: 1; transform: scale(1.3); }
+  }
+
+  .permission-note {
+    font-size: 0.75rem;
+    color: #AAA;
+    text-align: center;
+    margin-top: 0.8rem;
+  }
+</style>
+</head>
+<body>
+
+<div class="flag-bar"></div>
+
+<div class="container">
+
+  <!-- Header -->
+  <div class="header">
+    <div class="city-badge">🏙️ Surat Municipal Corporation</div>
+    <h1>Surat Ward<br><span>Citizen Feedback</span></h1>
+    <p class="gujarati-title">સુરત વોર્ડ નાગરિક પ્રતિસાદ ફોર્મ</p>
+    <div class="deadline">⏳ Closes 23 April 2026, 11:59 PM</div>
+  </div>
+
+  <!-- Card -->
+  <div class="card">
+    <div class="card-inner">
+
+      <!-- SCREEN 1: Idle -->
+      <div class="screen active" id="screen-idle">
+        <div class="map-dots">
+          <div class="dot"></div>
+          <div class="dot"></div>
+          <div class="dot"></div>
+        </div>
+        <div class="location-icon">📍</div>
+        <h2 class="screen-title">Verify Your Location</h2>
+        <p class="screen-sub">This survey is exclusively for residents within the <strong>Surat Municipal Corporation</strong> boundary. We need to verify your location before you proceed.</p>
+        <p class="gujarati-sub">આ સર્વે માત્ર સુરત મ્યુનિસિપલ કોર્પોરેશન વિસ્તારના નાગરિકો માટે છે.</p>
+        <button class="btn btn-primary" onclick="checkLocation()">
+          📍 Verify My Location
+        </button>
+        <p class="permission-note">Your browser will ask for location permission. We only check if you're in Surat — we don't store your exact location.</p>
+      </div>
+
+      <!-- SCREEN 2: Loading -->
+      <div class="screen" id="screen-loading">
+        <div class="spinner"></div>
+        <h2 class="screen-title">Checking Location...</h2>
+        <p class="screen-sub">Please wait while we verify you are within Surat Municipal Corporation limits.</p>
+        <p class="gujarati-sub">તમારું સ્થાન ચકાસવામાં આવી રહ્યું છે...</p>
+      </div>
+
+      <!-- SCREEN 3: Success -->
+      <div class="screen" id="screen-success">
+        <div class="success-icon">✅</div>
+        <h2 class="screen-title" style="color: var(--green);">Location Verified!</h2>
+        <p class="screen-sub">You are within <strong>Surat Municipal Corporation</strong> limits. You can now fill the feedback form.</p>
+        <p class="gujarati-sub">તમે સુરત SMC વિસ્તારમાં છો. હવે ફોર્મ ભરો!</p>
+        <div id="location-display" class="location-info">
+          📌 <span id="location-text">Detecting area...</span>
+        </div>
+        <button class="btn btn-success" onclick="goToForm()">
+          📋 Fill the Feedback Form →
+        </button>
+      </div>
+
+      <!-- SCREEN 4: Error - Outside Surat -->
+      <div class="screen" id="screen-outside">
+        <div class="error-icon">🚫</div>
+        <h2 class="screen-title error-title">Outside Surat Limits</h2>
+        <p class="screen-sub">Sorry, this survey is only for residents within <strong>Surat Municipal Corporation</strong> boundary. Your location appears to be outside Surat.</p>
+        <p class="gujarati-sub">માફ કરશો, આ સર્વે ફક્ત સુરત SMC હદ્દ વિસ્તારના નાગરિકો માટે છે.</p>
+        <div id="outside-location" class="location-info" style="background:#FFEBEE; color:#C62828;">
+          📌 <span id="outside-text">Location detected outside Surat</span>
+        </div>
+      </div>
+
+      <!-- SCREEN 5: Permission Denied -->
+      <div class="screen" id="screen-denied">
+        <div class="error-icon">🔒</div>
+        <h2 class="screen-title error-title">Location Access Denied</h2>
+        <p class="screen-sub">We need your location to verify you are a Surat resident. Please allow location access and try again.</p>
+        <p class="gujarati-sub">કૃપા કરીને location permission આપો અને ફરી પ્રયાસ કરો.</p>
+        <div class="divider"></div>
+        <button class="btn btn-primary" onclick="resetToIdle()">
+          🔄 Try Again
+        </button>
+      </div>
+
+    </div>
+
+    <!-- Footer -->
+    <div class="footer">
+      <p class="initiator">
+        Initiated by <strong>Jugal Kapadia</strong> · Master's in Politics & International Relations<br>
+        Pandit Deendayal Energy University (PDEU), Gandhinagar<br>
+        Independent civic initiative · Not affiliated with any political party
+      </p>
+    </div>
+  </div>
+
+</div>
+
+<script>
+  const FORM_URL = "https://docs.google.com/forms/d/1TZnGlE-hzlGTTs0iLDGAQsh6pxSENevCeUz7K5uCt3k/viewform";
+
+  // Surat Municipal Corporation approximate boundary box
+  // These coordinates cover the full SMC area
+  const SURAT_BOUNDS = {
+    minLat: 21.0500,
+    maxLat: 21.3200,
+    minLng: 72.7500,
+    maxLng: 73.0500
+  };
+
+  function showScreen(id) {
+    document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+    document.getElementById(id).classList.add('active');
+  }
+
+  function checkLocation() {
+    if (!navigator.geolocation) {
+      alert("Your browser does not support location detection. Please use a modern browser.");
+      return;
+    }
+    showScreen('screen-loading');
+    navigator.geolocation.getCurrentPosition(onSuccess, onError, {
+      enableHighAccuracy: true,
+      timeout: 10000,
+      maximumAge: 0
+    });
+  }
+
+  function isInSurat(lat, lng) {
+    return (
+      lat >= SURAT_BOUNDS.minLat &&
+      lat <= SURAT_BOUNDS.maxLat &&
+      lng >= SURAT_BOUNDS.minLng &&
+      lng <= SURAT_BOUNDS.maxLng
+    );
+  }
+
+  async function getAreaName(lat, lng) {
+    try {
+      const res = await fetch(`https://nominatim.openstreetmap.org/reverse?lat=${lat}&lon=${lng}&format=json`);
+      const data = await res.json();
+      return data.address?.suburb || data.address?.neighbourhood || data.address?.city_district || data.address?.city || "Surat";
+    } catch {
+      return "Surat area";
+    }
+  }
+
+  async function onSuccess(position) {
+    const { latitude, longitude } = position.coords;
+
+    if (isInSurat(latitude, longitude)) {
+      const area = await getAreaName(latitude, longitude);
+      document.getElementById('location-text').textContent = `${area}, Surat`;
+      showScreen('screen-success');
+    } else {
+      const area = await getAreaName(latitude, longitude);
+      document.getElementById('outside-text').textContent = `Detected: ${area} (Outside Surat SMC)`;
+      showScreen('screen-outside');
+    }
+  }
+
+  function onError(error) {
+    if (error.code === error.PERMISSION_DENIED) {
+      showScreen('screen-denied');
+    } else {
+      // On timeout or unavailable, show denied screen
+      showScreen('screen-denied');
+    }
+  }
+
+  function resetToIdle() {
+    showScreen('screen-idle');
+  }
+
+  function goToForm() {
+    window.location.href = FORM_URL;
+  }
+</script>
+
+</body>
+</html>
